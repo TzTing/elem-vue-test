@@ -56,10 +56,11 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="500px">
               <template v-slot="scope">
-                <el-button type="primary" icon="el-icon-edit" round @click="toEditUser(scope.row.id)"></el-button>
-                <el-button type="danger" icon="el-icon-delete" round @click="deleteUser(scope.row.id)" ></el-button>
+                <el-button type="primary" icon="el-icon-edit" round @click="toEditUser(scope.row.id)">编辑</el-button>
+                <el-button type="danger" icon="el-icon-delete" round @click="deleteUser(scope.row.id)" >删除</el-button>
+                <el-button type="primary" icon="el-icon-setting" round @click="toManagerRole(scope.row)" >分配角色</el-button>
               </template>
             </el-table-column>
 
@@ -136,6 +137,34 @@
   </el-dialog>
 
 
+  <el-dialog
+      title="分配角色"
+      :visible.sync="managerRoleDialog"
+      @close="managerRoleClosed"
+      width="30%">
+
+    <div>
+      <p>当前用户:{{userInfo.username}}</p>
+      <p>当前角色:{{userInfo.role_name}}</p>
+      <p>分配新的角色:
+        <el-select v-model="currentRoleId" placeholder="请选择">
+          <el-option
+            v-for="item in roleList"
+            :key="item.id"
+            :label="item.roleName"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </p>
+    </div>
+
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="managerRoleDialog = false">取 消</el-button>
+      <el-button type="primary" @click="saveRoleInfo()">确 定</el-button>
+  </span>
+  </el-dialog>
+
+
 
   </div>
 </template>
@@ -192,7 +221,14 @@
           ]
         },
         editLoading:false,
-        loading: false
+        loading: false,
+        managerRoleDialog:false,
+        //当前要分配角色的用户信息
+        userInfo:{},
+        //角色列表 用于给用户选择分配角色
+        roleList:[],
+        //当前用户选中的角色
+        currentRoleId:''
       }
     },
     methods: {
@@ -350,16 +386,59 @@
       {
         // this.$message.success('关闭')
       },
-
+      //关闭添加用户对话框事件
       addFromClosed()
       {
         this.$refs.addFormRef.resetFields();
       },
-      //
+      //关闭用户编辑对话框事件
       editFromClosed()
       {
         this.$refs.editFormRef.resetFields();
-      }
+      },
+      //分配角色事件
+      async toManagerRole(userInfo)
+      {
+        this.userInfo = userInfo;
+        //获取角色列表
+        const res = await this.$http.get('roles')
+        if(res.meta.status == 200)
+        {
+          this.roleList = res.data;
+        }
+        else
+        {
+          return this.$message.error('获取失败');
+        }
+        this.managerRoleDialog = true;
+      },
+      //保存用户角色
+      async saveRoleInfo()
+      {
+        if(this.currentRoleId == null || this.currentRoleId == '')
+        {
+          return this.$message.error('选择要分配的角色');
+        }
+        const res = await this.$http.put(`users/${this.userInfo.id}/role`, {rid:this.currentRoleId})
+        console.log(this.userInfo)
+        console.log(this.currentRoleId)
+        console.log(res)
+        if(res.meta.status == 200)
+        {
+          this.$message.success('更新成功');
+        }
+        else
+        {
+          return this.$message.error('更新失败');
+        }
+        this.getUsers();
+        this.managerRoleDialog = false;
+      },
+      //关闭用户分配角色对话框事件
+      managerRoleClosed()
+      {
+        this.currentRoleId = '';
+      },
 
     },
     created() {

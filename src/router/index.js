@@ -5,6 +5,7 @@ import Home from '../components/home.vue'
 import Index from '../components/index.vue'
 import Users from '../components/usermanager/user.vue'
 import Role from '../components/securitymanager/role.vue'
+import Rights from '../components/securitymanager/rights.vue'
 
 Vue.use(VueRouter)
 
@@ -32,7 +33,8 @@ const routes = [
     redirect:'/index',
     children:[{path:'/index', component:Index}
     , {path:'/users', component:Users}
-    , {path:'/roles', component:Role}]
+    , {path:'/roles', component:Role}
+    , {path:'/rights', component:Rights}]
   },
   {
     path: '/',
