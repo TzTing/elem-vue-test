@@ -319,10 +319,10 @@
         })
         //编辑
       },
-      handleSizeChange(newSiez)
+      handleSizeChange(newSize)
       {
         //改变当前显示页数的事件
-        this.queryParams.pagesize = newSiez;
+        this.queryParams.pagesize = newSize;
         this.getUsers();
       },
       handleCurrentChange(newCurrentSize)
