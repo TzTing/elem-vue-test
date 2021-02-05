@@ -4,6 +4,11 @@ import router from './router'
 import './plugins/element.js'
 import axios from 'axios'
 import Vuex from 'vuex'
+import VueQuillEditor from 'vue-quill-editor'
+
+import 'quill/dist/quill.core.css' // import styles
+import 'quill/dist/quill.snow.css' // for snow theme
+import 'quill/dist/quill.bubble.css' // for bubble theme
 
 
 Vue.config.productionTip = false
@@ -75,6 +80,7 @@ axios.interceptors.response.use(function (res)
 );
 
 Vue.use(Vuex)
+Vue.use(VueQuillEditor)
 Vue.prototype.$http = axios;
 
 const store = new Vuex.Store({

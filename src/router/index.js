@@ -8,6 +8,8 @@ import Role from '../components/securitymanager/role.vue'
 import Rights from '../components/securitymanager/rights.vue'
 import Cate from '../components/goods/Cate.vue'
 import Params from '../components/goods/Params.vue'
+import List from '../components/goods/List.vue'
+import AddGood from '../components/goods/AddGood.vue'
 
 Vue.use(VueRouter)
 
@@ -32,13 +34,17 @@ const routes = [
   {
     path: '/home',
     component: Home,
-    redirect:'/index',
-    children:[{path:'/index', component:Index}
-    , {path:'/users', component:Users}
-    , {path:'/roles', component:Role}
-    , {path:'/rights', component:Rights}
-    , {path:'/categories', component:Cate}
-    , {path:'/Params', component:Params}]
+    redirect: '/index',
+    children: [
+      { path: '/index', component: Index }
+      , { path: '/users', component: Users }
+      , { path: '/roles', component: Role }
+      , { path: '/rights', component: Rights }
+      , { path: '/categories', component: Cate }
+      , { path: '/Params', component: Params }
+      , { path: '/goods', component: List }
+      , { path: '/goods/add', component: AddGood }
+    ]
   },
   {
     path: '/',
